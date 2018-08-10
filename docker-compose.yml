@@ -1,0 +1,29 @@
+version: '2'
+
+services:
+ pyspark:
+    image: cloudfish/pyspark-notebook
+    volumes:
+       - {LOCAL_PATH}:/home/jovyan/work
+    ports:
+      - "8888:8888"
+    command: bash -c "start-notebook.sh --NotebookApp.token=''"
+    links:
+      - dbserver
+    environment:
+      GRANT_SUDO: "yes"
+  dbserver:
+    image: kakakakakku/mysql-57-world-database
+    environment:
+      MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
+  phpmyadmi:
+    image: phpmyadmin/phpmyadmin
+    ports: 
+      - "18080:80"
+    links:
+      - "dbserver"
+    environment:
+      PMA_HOST: dbserver
+      PMA_USER: root 
+      PMA_PASSWORD: ""
+      
